@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">MyCellar</string>
+    <string name="wine_name_req">Wine Name <font color='#FF0000'>*</font></string>
+    <string name="wine_type">Type of wine <font color='#FF0000'>*</font></string>
+    <string name="offered_by">Offered by</string>
+    <string name="quantity_req">Quantity <font color='#FF0000'>*</font></string>
+    <string name="quantity">Quantity</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="view_cellar">Show cellar</string>
+    <string name="select_type">Please select the type you want to display</string>
+    <string name="wine_name">Wine name</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

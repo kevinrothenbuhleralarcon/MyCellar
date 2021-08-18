@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startFragment">
 
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="ch.kra.mycellar.StartFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_typeSelectionFragment"
+            app:destination="@id/typeSelectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/itemDetailsFragment"
+        android:name="ch.kra.mycellar.ItemDetailsFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_item_details">
+        <action
+            android:id="@+id/action_itemDetailsFragment_to_wineListFragment"
+            app:destination="@id/wineListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/typeSelectionFragment"
+        android:name="ch.kra.mycellar.TypeSelectionFragment"
+        android:label="TypeSelectionFragment"
+        tools:layout="@layout/fragment_type_selection">
+        <action
+            android:id="@+id/action_typeSelectionFragment_to_wineListFragment"
+            app:destination="@id/wineListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/wineListFragment"
+        android:name="ch.kra.mycellar.WineListFragment"
+        android:label="fragment_wine_list"
+        tools:layout="@layout/fragment_wine_list" >
+        <action
+            android:id="@+id/action_wineListFragment_to_itemDetailsFragment"
+            app:destination="@id/itemDetailsFragment" />
+    </fragment>
 </navigation>
