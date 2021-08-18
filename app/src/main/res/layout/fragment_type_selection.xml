@@ -23,10 +23,11 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_type_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/list_type"/>

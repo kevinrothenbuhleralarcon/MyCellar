@@ -26,7 +26,9 @@ class ItemDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //set the value of the dropdownList
-        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+        val items = mutableListOf<String>()
+        enumValues<WineType>().forEach { items.add(it.strName) }
+        items.removeAt(items.lastIndex)
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
         binding.dropDownType.setAdapter(adapter)
     }

@@ -41,5 +41,8 @@
         <action
             android:id="@+id/action_wineListFragment_to_itemDetailsFragment"
             app:destination="@id/itemDetailsFragment" />
+        <argument
+            android:name="wineType"
+            app:argType="string" />
     </fragment>
 </navigation>

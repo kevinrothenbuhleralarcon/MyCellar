@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import ch.kra.mycellar.databinding.FragmentStartBinding
 
 class StartFragment: Fragment() {
@@ -23,6 +24,10 @@ class StartFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.btnCellar.setOnClickListener {
+            val action = StartFragmentDirections.actionStartFragmentToTypeSelectionFragment()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroy() {
