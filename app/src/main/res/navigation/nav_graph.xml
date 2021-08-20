@@ -23,6 +23,12 @@
         <action
             android:id="@+id/action_itemDetailsFragment_to_wineListFragment"
             app:destination="@id/wineListFragment" />
+        <argument
+            android:name="wineType"
+            app:argType="string" />
+        <argument
+            android:name="wineId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/typeSelectionFragment"

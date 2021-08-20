@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Wine(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @NonNull @ColumnInfo(name = "wine_name") val wineName: String,
     @ColumnInfo(name = "offered_by") val offeredBy: String,
     @NonNull @ColumnInfo(name = "wine_type") val wineType: String,
-    @ColumnInfo(name = "quantity") val quantity: Int
+    @NonNull @ColumnInfo(name = "quantity") val quantity: Int
 )
