@@ -11,8 +11,8 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_start">
         <action
-            android:id="@+id/action_startFragment_to_typeSelectionFragment"
-            app:destination="@id/typeSelectionFragment" />
+            android:id="@+id/action_startFragment_to_wineListFragment"
+            app:destination="@id/wineListFragment" />
     </fragment>
 
     <fragment
@@ -22,33 +22,19 @@
         tools:layout="@layout/fragment_item_details">
         <action
             android:id="@+id/action_itemDetailsFragment_to_wineListFragment"
-            app:destination="@id/wineListFragment" />
-        <argument
-            android:name="wineType"
-            app:argType="string" />
+            app:destination="@id/wineListFragment"
+            app:popUpTo="@id/wineListFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="wineId"
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/typeSelectionFragment"
-        android:name="ch.kra.mycellar.TypeSelectionFragment"
-        android:label="TypeSelectionFragment"
-        tools:layout="@layout/fragment_type_selection">
-        <action
-            android:id="@+id/action_typeSelectionFragment_to_wineListFragment"
-            app:destination="@id/wineListFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/wineListFragment"
         android:name="ch.kra.mycellar.WineListFragment"
-        android:label="fragment_wine_list"
         tools:layout="@layout/fragment_wine_list" >
         <action
             android:id="@+id/action_wineListFragment_to_itemDetailsFragment"
             app:destination="@id/itemDetailsFragment" />
-        <argument
-            android:name="wineType"
-            app:argType="string" />
     </fragment>
 </navigation>

@@ -1,24 +1,19 @@
 package ch.kra.mycellar
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.databinding.FragmentWineListBinding
 import ch.kra.mycellar.viewmodel.WineViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class WineListFragment : Fragment() {
 
-    private val navigationArgs: WineListFragmentArgs by navArgs()
     private var _binding: FragmentWineListBinding? = null
     private val binding get() = _binding!!
 
@@ -26,7 +21,10 @@ class WineListFragment : Fragment() {
         WineViewModel.WineViewModelFactory((activity?.application as WineApplication).database.wineDao())
     }
 
-    private lateinit var wineType: String
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,43 +32,61 @@ class WineListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentWineListBinding.inflate(inflater, container, false)
-        wineType = navigationArgs.wineType
+        //wineType = navigationArgs.wineType
+        changeTitle()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.floatBtnAddWine.setOnClickListener {
-            val action = WineListFragmentDirections.actionWineListFragmentToItemDetailsFragment(wineType = wineType, wineId = 0)
+            val action = WineListFragmentDirections.actionWineListFragmentToItemDetailsFragment(wineId = 0)
             findNavController().navigate(action)
         }
         val recyclerView = binding.recyclerWineList
         recyclerView.layoutManager = LinearLayoutManager(this.requireContext())
 
-        val adapter = WineListAdapter(this::goToWineDetails, this::addWineBottle, this::substractWineBottle)
+        val adapter = WineListAdapter(this::goToWineDetails, this::changeQuantity)
         recyclerView.adapter = adapter
-        lifecycle.coroutineScope.launch{
-            viewModel.getList(wineType).collect() {
+        viewModel.listWine.observe(this.viewLifecycleOwner) { wines ->
+            wines.let {
                 adapter.submitList(it)
             }
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        enumValues<WineType>().forEach { menu.add(it.strName) }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId != android.R.id.home) {
+            Log.d("wineType", "Wine type: ${item.title}")
+            viewModel.changeWineType(item.title.toString())
+            changeTitle()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     fun goToWineDetails(wine: Wine) {
-        val action = WineListFragmentDirections.actionWineListFragmentToItemDetailsFragment(wineType = wineType, wineId = wine.id)
+        val action = WineListFragmentDirections.actionWineListFragmentToItemDetailsFragment(wineId = wine.id)
         findNavController().navigate(action)
     }
 
-    fun addWineBottle(wine: Wine) {
-
-    }
-
-    fun substractWineBottle(wine: Wine) {
-
+    fun changeQuantity(wine: Wine, add: Boolean) {
+        viewModel.changeQuantity(wine, add)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun changeTitle()
+    {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.wineType.value
     }
 }

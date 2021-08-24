@@ -12,7 +12,7 @@
         android:id="@+id/layout_wine_detail"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.7"
+        android:layout_weight="0.6"
         android:orientation="horizontal">
 
         <TextView
@@ -37,17 +37,15 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3">
+        android:layout_weight="0.4">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_input_add"
             android:layout_alignParentStart="true"
-            app:tint="@android:color/white"
-            app:backgroundTint="@color/purple_500"
-            app:fabSize="mini"/>
+            android:src="@android:drawable/ic_input_add"
+            style="@style/btnPlusMinus"/>
 
         <TextView
             android:id="@+id/lbl_quantity"
@@ -63,9 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/dialog_holo_light_frame"
-            app:fabSize="mini"
-            app:tint="@android:color/white"
-            app:backgroundTint="@color/purple_500"/>
+            style="@style/btnPlusMinus"
+            />
     </RelativeLayout>
 
 </LinearLayout>

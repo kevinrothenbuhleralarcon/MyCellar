@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.databinding.FragmentItemDetailsBinding
 import ch.kra.mycellar.viewmodel.WineViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ItemDetailsFragment : Fragment() {
     private val navigationArgs: ItemDetailsFragmentArgs by navArgs()
@@ -54,7 +55,7 @@ class ItemDetailsFragment : Fragment() {
                 bind(wine)
             }
             binding.btnSave.setOnClickListener { updateWine() }
-            binding.btnDelete.setOnClickListener { deleteWine() }
+            binding.btnDelete.setOnClickListener { showDialogConfirmation() }
         } else {
             binding.btnSave.setOnClickListener { addWine() }
             binding.btnDelete.isGone = true
@@ -85,13 +86,23 @@ class ItemDetailsFragment : Fragment() {
                 )
             }
         }
-        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment(navigationArgs.wineType)
+        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment()
         findNavController().navigate(action)
+    }
+
+    private fun showDialogConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_confirmation_title))
+            .setMessage(getString(R.string.dialog_confirmation_message))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.dialog_confirmation_positive)) { _, _ -> deleteWine() }
+            .setNegativeButton(getString(R.string.dialog_confirmation_negative)) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun deleteWine() {
         viewModel.deleteWine(wine)
-        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment(wineType = navigationArgs.wineType)
+        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment()
         findNavController().navigate(action)
     }
 
@@ -106,7 +117,7 @@ class ItemDetailsFragment : Fragment() {
                 binding.textBoxOfferedBy.text.toString()
             )
         }
-        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment(wineType = navigationArgs.wineType)
+        val action = ItemDetailsFragmentDirections.actionItemDetailsFragmentToWineListFragment()
         findNavController().navigate(action)
     }
 

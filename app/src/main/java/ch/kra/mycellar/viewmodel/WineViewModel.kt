@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.database.WineDao
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class WineViewModel(private val wineDao: WineDao) : ViewModel() {
@@ -19,12 +18,20 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
         }
     }
 
-    fun getList(wineType: String): Flow<List<Wine>> {
-        return if (wineType == WineType.ALL.strName) {
-            wineDao.getAll()
+    private var _wineType = MutableLiveData(WineType.ALL.strName)
+    val wineType: LiveData<String> get() = _wineType
+    val listWine: LiveData<List<Wine>> = Transformations.switchMap(_wineType) { _ -> getList() }
+
+    fun getList(): LiveData<List<Wine>> {
+        return if (wineType.value == WineType.ALL.strName) {
+            wineDao.getAll().asLiveData()
         } else {
-            wineDao.getByWineType(wineType)
+            wineDao.getByWineType(wineType.value!!).asLiveData()
         }
+    }
+
+    fun changeWineType(wineType: String) {
+        _wineType.value = wineType
     }
 
     fun getWine(wineId: Int): LiveData<Wine> {
@@ -49,6 +56,20 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
     fun deleteWine(wine: Wine) {
         viewModelScope.launch {
             wineDao.delete(wine)
+        }
+    }
+
+    fun changeQuantity(wine: Wine, add: Boolean) {
+        if (!(wine.quantity == 0 && !add )) {
+            var quantityChanged = -1
+            if (add) {quantityChanged = 1}
+            updateWine(
+                wine.id,
+                wine.wineName,
+                wine.wineType,
+                (wine.quantity + quantityChanged).toString(),
+                wine.offeredBy
+            )
         }
     }
 

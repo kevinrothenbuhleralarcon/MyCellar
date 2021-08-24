@@ -25,7 +25,7 @@ class StartFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnCellar.setOnClickListener {
-            val action = StartFragmentDirections.actionStartFragmentToTypeSelectionFragment()
+            val action = StartFragmentDirections.actionStartFragmentToWineListFragment()
             findNavController().navigate(action)
         }
     }

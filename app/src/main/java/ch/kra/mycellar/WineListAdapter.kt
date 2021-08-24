@@ -10,8 +10,7 @@ import ch.kra.mycellar.databinding.ListWineBinding
 
 class WineListAdapter(
     private val onClickWine: (Wine) -> Unit,
-    private val onClickPlus: (Wine) -> Unit,
-    private val onClickMinus: (Wine) -> Unit
+    private val onClickQuantity: (Wine, Boolean) -> Unit
 ) : ListAdapter<Wine, WineListAdapter.WineListViewHolder>(DiffCallBack) {
     companion object {
         private val DiffCallBack = object : DiffUtil.ItemCallback<Wine>() {
@@ -41,12 +40,12 @@ class WineListAdapter(
         viewType: Int
     ): WineListAdapter.WineListViewHolder {
         val wineListViewHolder =
-            WineListViewHolder(ListWineBinding.inflate(LayoutInflater.from(parent.context)))
+            WineListViewHolder(ListWineBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         with(wineListViewHolder.binding) {
             layoutWineDetail.setOnClickListener { onClickWine(getItem(wineListViewHolder.adapterPosition)) }
-            btnPlus.setOnClickListener { onClickPlus(getItem(wineListViewHolder.adapterPosition)) }
-            btnMinus.setOnClickListener { onClickMinus(getItem(wineListViewHolder.adapterPosition)) }
+            btnPlus.setOnClickListener { onClickQuantity(getItem(wineListViewHolder.adapterPosition), true) }
+            btnMinus.setOnClickListener { onClickQuantity(getItem(wineListViewHolder.adapterPosition), false) }
         }
 
         return wineListViewHolder
