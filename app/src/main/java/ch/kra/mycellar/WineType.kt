@@ -1,11 +1,11 @@
 package ch.kra.mycellar
 
-enum class WineType(val strName: String) {
-    RED_WINE("Red wine"),
-    WHITE_WINE("White wine"),
-    ROSE_WINE("Rosé wine"),
-    SPARKLING_WINE("Sparkling wine"),
-    DESSERT_WINE("Dessert wine"),
-    FORTIFIED_WINE("Fortified wine"),
-    ALL("All")
+enum class WineType(val resId: Int) {
+    RED_WINE(R.string.red_wine),
+    WHITE_WINE(R.string.white_wine),
+    ROSE_WINE(R.string.rose_wine),
+    SPARKLING_WINE(R.string.sparkling_wine),
+    DESSERT_WINE(R.string.dessert_wine),
+    FORTIFIED_WINE(R.string.fortified_wine),
+    ALL(R.string.all);
 }

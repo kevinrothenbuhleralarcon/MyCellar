@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyCellar</string>
+    <string name="wine_name_req">Nom du vin <font color='#FF0000'>*</font></string>
+    <string name="wine_type">Type de vin <font color='#FF0000'>*</font></string>
+    <string name="offered_by">Offert par</string>
+    <string name="quantity_req">Quantité <font color='#FF0000'>*</font></string>
+    <string name="quantity">Quantité</string>
+    <string name="save">Enregistrer</string>
+    <string name="delete">Supprimer</string>
+    <string name="view_cellar">Montrer la cave</string>
+    <string name="wine_name">Nom du vin</string>
+    <string name="wine_list_fragment_title">{wineType}</string>
+    <string name="dialog_confirmation_title">Confirmation</string>
+    <string name="dialog_confirmation_message">Êtes vous sûre de vouloir supprimer ce vin?</string>
+    <string name="dialog_confirmation_positive">Oui</string>
+    <string name="dialog_confirmation_negative">Non</string>
+    <string name="red_wine">Vin rouge</string>
+    <string name="white_wine">Vin blanc</string>
+    <string name="rose_wine">Rosé</string>
+    <string name="sparkling_wine">Vin effervescent</string>
+    <string name="dessert_wine">Vin sucré</string>
+    <string name="fortified_wine">Vin doux naturel</string>
+    <string name="all">Tous</string>
+</resources>

@@ -1,7 +1,6 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import ch.kra.mycellar.R
+import ch.kra.mycellar.WineApplication
+import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.databinding.FragmentItemDetailsBinding
-import ch.kra.mycellar.viewmodel.WineViewModel
+import ch.kra.mycellar.other.CellarUtility
+import ch.kra.mycellar.ui.viewmodel.WineViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ItemDetailsFragment : Fragment() {
@@ -43,7 +46,7 @@ class ItemDetailsFragment : Fragment() {
 
         //set the value of the dropdownList
         val items = mutableListOf<String>()
-        enumValues<WineType>().forEach { items.add(it.strName) }
+        enumValues<WineType>().forEach { items.add(getString(it.resId)) }
         items.removeAt(items.lastIndex) //remove the last item of the list (ALL) because it's not a wine type, it's used for the wine type selection
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
         binding.dropDownType.setAdapter(adapter)
@@ -67,7 +70,7 @@ class ItemDetailsFragment : Fragment() {
             textBoxName.setText(wine.wineName)
             textBoxOfferedBy.setText(wine.offeredBy)
             textBoxQuantity.setText(wine.quantity.toString())
-            dropDownType.setText(wine.wineType, false)
+            dropDownType.setText(getString(wine.wineType), false)
         }
     }
 
@@ -80,7 +83,7 @@ class ItemDetailsFragment : Fragment() {
                 )) {
                 viewModel.addWine(
                     textBoxName.text.toString(),
-                    dropDownType.text.toString(),
+                    CellarUtility.getWineTypeFromString(requireContext(), binding.dropDownType.text.toString()).resId,
                     textBoxQuantity.text.toString(),
                     textBoxOfferedBy.text.toString()
                 )
@@ -107,12 +110,11 @@ class ItemDetailsFragment : Fragment() {
     }
 
     private fun updateWine() {
-        Log.d("update", "isEntryValid? ${isEntryValid()}")
         if (isEntryValid()) {
             viewModel.updateWine(
                 wine.id,
                 binding.textBoxName.text.toString(),
-                binding.dropDownType.text.toString(),
+                CellarUtility.getWineTypeFromString(requireContext(), binding.dropDownType.text.toString()).resId,
                 binding.textBoxQuantity.text.toString(),
                 binding.textBoxOfferedBy.text.toString()
             )

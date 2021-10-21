@@ -9,7 +9,7 @@ interface WineDao {
     fun getAll(): Flow<List<Wine>>
 
     @Query("SELECT * FROM wine WHERE wine_type = :wineType ORDER BY wine_type, wine_name ASC")
-    fun getByWineType(wineType: String): Flow<List<Wine>>
+    fun getByWineType(wineType: Int): Flow<List<Wine>>
 
     @Query("SELECT * FROM wine WHERE id = :wineId")
     fun getWine(wineId: Int): Flow<Wine>

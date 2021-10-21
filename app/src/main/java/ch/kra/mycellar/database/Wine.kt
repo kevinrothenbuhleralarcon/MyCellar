@@ -10,6 +10,6 @@ data class Wine(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @NonNull @ColumnInfo(name = "wine_name") val wineName: String,
     @ColumnInfo(name = "offered_by") val offeredBy: String,
-    @NonNull @ColumnInfo(name = "wine_type") val wineType: String,
+    @NonNull @ColumnInfo(name = "wine_type") val wineType: Int,
     @NonNull @ColumnInfo(name = "quantity") val quantity: Int
 )

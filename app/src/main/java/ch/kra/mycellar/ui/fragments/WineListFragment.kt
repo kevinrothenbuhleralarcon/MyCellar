@@ -1,16 +1,19 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import ch.kra.mycellar.WineApplication
+import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.databinding.FragmentWineListBinding
-import ch.kra.mycellar.viewmodel.WineViewModel
+import ch.kra.mycellar.other.CellarUtility
+import ch.kra.mycellar.ui.adapter.WineListAdapter
+import ch.kra.mycellar.ui.viewmodel.WineViewModel
 
 class WineListFragment : Fragment() {
 
@@ -30,9 +33,7 @@ class WineListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentWineListBinding.inflate(inflater, container, false)
-        //wineType = navigationArgs.wineType
         changeTitle()
         return binding.root
     }
@@ -57,13 +58,12 @@ class WineListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        enumValues<WineType>().forEach { menu.add(it.strName) }
+        enumValues<WineType>().forEach { menu.add(it.resId) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId != android.R.id.home) {
-            Log.d("wineType", "Wine type: ${item.title}")
-            viewModel.changeWineType(item.title.toString())
+            viewModel.changeWineType(CellarUtility.getWineTypeFromString(requireContext(), item.title.toString()).resId)
             changeTitle()
             true
         } else {
@@ -71,12 +71,12 @@ class WineListFragment : Fragment() {
         }
     }
 
-    fun goToWineDetails(wine: Wine) {
+    private fun goToWineDetails(wine: Wine) {
         val action = WineListFragmentDirections.actionWineListFragmentToItemDetailsFragment(wineId = wine.id)
         findNavController().navigate(action)
     }
 
-    fun changeQuantity(wine: Wine, add: Boolean) {
+    private fun changeQuantity(wine: Wine, add: Boolean) {
         viewModel.changeQuantity(wine, add)
     }
 
@@ -87,6 +87,9 @@ class WineListFragment : Fragment() {
 
     private fun changeTitle()
     {
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = viewModel.wineType.value
+        viewModel.wineType.value?.let {
+            (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(it)
+        }
+
     }
 }

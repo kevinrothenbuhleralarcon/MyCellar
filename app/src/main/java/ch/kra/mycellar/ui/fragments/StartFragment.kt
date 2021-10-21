@@ -1,4 +1,4 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

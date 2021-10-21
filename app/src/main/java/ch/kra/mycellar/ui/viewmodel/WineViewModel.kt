@@ -1,4 +1,4 @@
-package ch.kra.mycellar.viewmodel
+package ch.kra.mycellar.ui.viewmodel
 
 import androidx.lifecycle.*
 import ch.kra.mycellar.WineType
@@ -18,19 +18,11 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
         }
     }
 
-    private var _wineType = MutableLiveData(WineType.ALL.strName)
-    val wineType: LiveData<String> get() = _wineType
+    private var _wineType = MutableLiveData(WineType.ALL.resId)
+    val wineType: LiveData<Int> get() = _wineType
     val listWine: LiveData<List<Wine>> = Transformations.switchMap(_wineType) { _ -> getList() }
 
-    fun getList(): LiveData<List<Wine>> {
-        return if (wineType.value == WineType.ALL.strName) {
-            wineDao.getAll().asLiveData()
-        } else {
-            wineDao.getByWineType(wineType.value!!).asLiveData()
-        }
-    }
-
-    fun changeWineType(wineType: String) {
+    fun changeWineType(wineType: Int) {
         _wineType.value = wineType
     }
 
@@ -45,11 +37,11 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
         return true
     }
 
-    fun addWine(wineName: String, wineType: String, quantity: String, offeredBy: String) {
+    fun addWine(wineName: String, wineType: Int, quantity: String, offeredBy: String) {
         insertWine(getNewWineEntry(wineName, wineType, quantity, offeredBy))
     }
 
-    fun updateWine(wineId: Int, wineName: String, wineType: String, quantity: String, offeredBy: String){
+    fun updateWine(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String){
         updateWine(getUpdateWineEntry(wineId, wineName, wineType, quantity, offeredBy))
     }
 
@@ -73,7 +65,15 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
         }
     }
 
-    private fun getNewWineEntry(wineName: String, wineType: String, quantity: String, offeredBy: String): Wine {
+    private fun getList(): LiveData<List<Wine>> {
+        return if (wineType.value == WineType.ALL.resId) {
+            wineDao.getAll().asLiveData()
+        } else {
+            wineDao.getByWineType(wineType.value!!).asLiveData()
+        }
+    }
+
+    private fun getNewWineEntry(wineName: String, wineType: Int, quantity: String, offeredBy: String): Wine {
         return Wine(
             wineName = wineName,
             wineType = wineType,
@@ -88,7 +88,7 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
         }
     }
 
-    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: String, quantity: String, offeredBy: String): Wine {
+    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String): Wine {
         return Wine(
             id = wineId,
             wineName = wineName,

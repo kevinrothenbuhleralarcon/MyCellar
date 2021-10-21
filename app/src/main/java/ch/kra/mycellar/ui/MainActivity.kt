@@ -1,10 +1,11 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import ch.kra.mycellar.R
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private lateinit var navController: NavController

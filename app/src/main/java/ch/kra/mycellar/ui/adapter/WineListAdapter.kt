@@ -1,4 +1,4 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -38,7 +38,7 @@ class WineListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): WineListAdapter.WineListViewHolder {
+    ): WineListViewHolder {
         val wineListViewHolder =
             WineListViewHolder(ListWineBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -51,7 +51,7 @@ class WineListAdapter(
         return wineListViewHolder
     }
 
-    override fun onBindViewHolder(holder: WineListAdapter.WineListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: WineListViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
