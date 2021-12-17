@@ -1,33 +1,17 @@
 package ch.kra.mycellar.ui.fragments
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import ch.kra.mycellar.R
-import ch.kra.mycellar.WineApplication
-import ch.kra.mycellar.WineType
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.databinding.FragmentItemDetailsBinding
-import ch.kra.mycellar.other.CellarUtility
-import ch.kra.mycellar.ui.viewmodel.WineViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ItemDetailsFragment : Fragment() {
-    private val navigationArgs: ItemDetailsFragmentArgs by navArgs()
+    /*private val navigationArgs: ItemDetailsFragmentArgs by navArgs()
 
     private var _binding: FragmentItemDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: WineViewModel by activityViewModels {
-        WineViewModel.WineViewModelFactory((activity?.application as WineApplication).database.wineDao())
-    }
+
+    private val viewModel: WineViewModel by viewModels()
 
     private lateinit var wine: Wine
 
@@ -134,5 +118,5 @@ class ItemDetailsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
+    }*/
 }

@@ -1,8 +1,9 @@
 package ch.kra.mycellar
 
 import android.app.Application
-import ch.kra.mycellar.database.WineRoomDatabase
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class WineApplication: Application() {
-    val database: WineRoomDatabase by lazy { WineRoomDatabase.getDatabase(this) }
+
 }

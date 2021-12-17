@@ -3,20 +3,15 @@ package ch.kra.mycellar.ui.viewmodel
 import androidx.lifecycle.*
 import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.database.WineDao
+import ch.kra.mycellar.reposotories.WineRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WineViewModel(private val wineDao: WineDao) : ViewModel() {
-
-    class WineViewModelFactory(private val wineDao: WineDao): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(WineViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return WineViewModel(wineDao) as T
-            }
-            throw IllegalArgumentException("Unknown viewModel class")
-        }
-    }
+@HiltViewModel
+class WineViewModel @Inject constructor(
+    private val wineRepository: WineRepository
+) : ViewModel() {
 
     private var _wineType = MutableLiveData(WineType.ALL.resId)
     val wineType: LiveData<Int> get() = _wineType
@@ -27,7 +22,7 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
     }
 
     fun getWine(wineId: Int): LiveData<Wine> {
-        return wineDao.getWine(wineId).asLiveData()
+        return wineRepository.getWine(wineId).asLiveData()
     }
 
     fun isEntryValid(wineName: String, wineType: String, quantity: String): Boolean {
@@ -47,7 +42,7 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
 
     fun deleteWine(wine: Wine) {
         viewModelScope.launch {
-            wineDao.delete(wine)
+            wineRepository.delete(wine)
         }
     }
 
@@ -67,9 +62,9 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
 
     private fun getList(): LiveData<List<Wine>> {
         return if (wineType.value == WineType.ALL.resId) {
-            wineDao.getAll().asLiveData()
+            wineRepository.getAllWine().asLiveData()
         } else {
-            wineDao.getByWineType(wineType.value!!).asLiveData()
+            wineRepository.getWineByType(wineType.value!!).asLiveData()
         }
     }
 
@@ -84,7 +79,7 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
 
     private fun insertWine(wine: Wine) {
         viewModelScope.launch {
-            wineDao.insert(wine)
+            wineRepository.insert(wine)
         }
     }
 
@@ -100,7 +95,7 @@ class WineViewModel(private val wineDao: WineDao) : ViewModel() {
 
     private fun updateWine(wine: Wine) {
         viewModelScope.launch {
-            wineDao.update(wine)
+            wineRepository.update(wine)
         }
     }
 }

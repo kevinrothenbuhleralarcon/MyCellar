@@ -1,23 +1,45 @@
 package ch.kra.mycellar.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import ch.kra.mycellar.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.remember
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import ch.kra.myapplication.ui.theme.MyCellarTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private lateinit var navController: NavController
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        setupActionBarWithNavController(navController)
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        setContent {
+            MyCellarTheme() {
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = "wine_list_screen"
+                ) {
+                    composable("wine_list_screen") {
+                        WineListScreen(navigate = { navController.navigate("wine_detail_screen/$it") })
+                    }
+                    composable("wine_detail_screen/{wineId}",
+                        arguments = listOf(
+                            navArgument("wineId") {
+                                type = NavType.IntType
+                            }
+                        )
+                    ) {
+                        val wineId = remember {
+                            it.arguments?.getInt("wineId")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
