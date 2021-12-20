@@ -18,13 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
 import ch.kra.mycellar.database.Wine
+import ch.kra.mycellar.other.CellarUtility
 import ch.kra.mycellar.ui.viewmodel.WineViewModel
 
 @Composable
@@ -106,7 +107,6 @@ private fun WineListRow(
     ) {
         WineCard(
             wine = wineList[rowNumber * 2],
-            painter = painterResource(id = R.drawable.red_wine),
             onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth(0.5f)
@@ -116,7 +116,6 @@ private fun WineListRow(
         if (wineList.size >= rowNumber * 2 + 2) {
             WineCard(
                 wine = wineList[rowNumber * 2 + 1],
-                painter = painterResource(id = R.drawable.white_wine),
                 onClick = onClick,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -128,26 +127,25 @@ private fun WineListRow(
                     .fillMaxWidth()
             )
         }
-
-
     }
 }
 
 @Composable
 private fun WineCard(
     wine: Wine,
-    painter: Painter,
     modifier: Modifier = Modifier,
+    viewModel: WineViewModel = hiltViewModel(),
     onClick: (Int) -> Unit
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .padding(8.dp)
-            .clickable { onClick(1) }
+            .clickable { onClick(wine.id) }
     ) {
+
         Image(
-            painter = painter,
+            painter = painterResource(id = CellarUtility.getBackgroundIdFromType(LocalContext.current, wine.wineType)),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alpha = 0.3f,
@@ -177,7 +175,7 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            /* TODO add wine */
+                            viewModel.changeQuantity(wine, true)
                         }
                 )
                 Text(text = wine.quantity.toString())
@@ -188,7 +186,7 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            /* TODO substract wine */
+                            viewModel.changeQuantity(wine, false)
                         }
                 )
             }

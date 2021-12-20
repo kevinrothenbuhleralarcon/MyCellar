@@ -24,6 +24,7 @@ object AppModule {
         "wine_database"
     )
         .addMigrations(WineRoomDatabase.MIGRATION_1_2)
+        .addMigrations(WineRoomDatabase.MIGRATION_2_3)
         .build()
 
     @Singleton

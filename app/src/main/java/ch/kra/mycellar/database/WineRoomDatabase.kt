@@ -1,5 +1,6 @@
 package ch.kra.mycellar.database
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
@@ -7,30 +8,13 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ch.kra.mycellar.WineType
 
-@Database(entities = arrayOf(Wine::class), version = 2)
+@Database(entities = arrayOf(Wine::class), version = 3)
 abstract class WineRoomDatabase : RoomDatabase() {
     abstract fun wineDao(): WineDao
 
     companion object {
-        /*@Volatile
-        private var INSTANCE: WineRoomDatabase? = null
-
-        fun getDatabase(context: Context): WineRoomDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context,
-                    WineRoomDatabase::class.java,
-                    "wine_database"
-                )
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
-                INSTANCE = instance
-
-                instance
-            }
-        }*/
-
         val MIGRATION_1_2 = object : Migration(1, 2) {
+            @SuppressLint("Range")
             override fun migrate(database: SupportSQLiteDatabase) {
                 //Create a new table with the wine_type as en integer (opposed to a string)
                 database.execSQL(
@@ -62,6 +46,27 @@ abstract class WineRoomDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            @SuppressLint("Range")
+            override fun migrate(database: SupportSQLiteDatabase) {
+                //get the current stored wine
+                val cursor = database.query(SimpleSQLiteQuery("SELECT * FROM wine"))
+                //initialize the cursor with the 1st wine
+                cursor.moveToNext()
+
+                while (!cursor.isAfterLast) {
+                    val wineTypeOld = cursor.getInt(cursor.getColumnIndex("wine_type"))
+                    val wineTypeNew = getNewTypeValuesFromOldOnes(wineTypeOld)
+                    val wineId = cursor.getInt(cursor.getColumnIndex("id"))
+
+                    val sqlCommand =
+                        "UPDATE wine SET wine_type = $wineTypeNew WHERE id = $wineId"
+                    database.execSQL(sqlCommand)
+                    cursor.moveToNext()
+                }
+            }
+        }
+
         private fun getWineFromEnglishString(wineTypeString: String): Int {
             return when (wineTypeString) {
                 "Red wine" -> WineType.RED_WINE.resId
@@ -70,6 +75,16 @@ abstract class WineRoomDatabase : RoomDatabase() {
                 "Sparkling wine" -> WineType.SPARKLING_WINE.resId
                 "Desert wine" -> WineType.DESSERT_WINE.resId
                 "Fortified wine" -> WineType.FORTIFIED_WINE.resId
+                else -> WineType.ALL.resId
+            }
+        }
+
+        private fun getNewTypeValuesFromOldOnes(wineTypeOld: Int): Int {
+            return when (wineTypeOld) {
+                2131689588 -> WineType.RED_WINE.resId
+                2131689595 -> WineType.WHITE_WINE.resId
+                2131689589 -> WineType.ROSE_WINE.resId
+                2131689592 -> WineType.SPARKLING_WINE.resId
                 else -> WineType.ALL.resId
             }
         }

@@ -37,6 +37,8 @@ class MainActivity : ComponentActivity() {
                         val wineId = remember {
                             it.arguments?.getInt("wineId")
                         }
+                        
+                        WineListScreen(navigate = { navController.popBackStack() })
                     }
                 }
             }

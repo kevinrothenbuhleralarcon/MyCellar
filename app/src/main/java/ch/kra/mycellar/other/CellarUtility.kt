@@ -17,4 +17,28 @@ object CellarUtility {
             else -> WineType.ALL
         }
     }
+
+    fun getStringFromWineType(context: Context, wineTypeId: Int): String {
+        return when (wineTypeId) {
+            WineType.RED_WINE.resId -> context.getString(R.string.red_wine)
+            WineType.WHITE_WINE.resId -> context.getString(R.string.white_wine)
+            WineType.ROSE_WINE.resId -> context.getString(R.string.rose_wine)
+            WineType.SPARKLING_WINE.resId -> context.getString(R.string.sparkling_wine)
+            WineType.DESSERT_WINE.resId -> context.getString(R.string.dessert_wine)
+            WineType.FORTIFIED_WINE.resId -> context.getString(R.string.fortified_wine)
+            else -> context.getString(R.string.all)
+        }
+    }
+
+    fun getBackgroundIdFromType(context: Context, wineTypeId: Int): Int {
+        return when (wineTypeId) {
+            WineType.RED_WINE.resId -> R.drawable.red_wine
+            WineType.WHITE_WINE.resId -> R.drawable.white_wine
+            WineType.ROSE_WINE.resId -> R.drawable.rose_wine
+            WineType.SPARKLING_WINE.resId -> R.drawable.sparkling_wine
+            WineType.DESSERT_WINE.resId -> R.drawable.dessert_wine
+            WineType.FORTIFIED_WINE.resId -> R.drawable.fortified_wine
+            else -> 0
+        }
+    }
 }

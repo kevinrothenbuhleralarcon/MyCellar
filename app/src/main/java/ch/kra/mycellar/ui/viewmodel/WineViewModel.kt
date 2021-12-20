@@ -8,7 +8,7 @@ import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.reposotories.WineRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -75,15 +75,14 @@ class WineViewModel @Inject constructor(
     }
 
     private fun getList() {
-        listWine.value = listOf()
         viewModelScope.launch {
             if (wineType.value == WineType.ALL.resId) {
-                wineRepository.getAllWine().collect {
-                listWine.value += it
+                wineRepository.getAllWine().collectLatest {
+                listWine.value = it
                 }
             } else {
-                wineRepository.getWineByType(wineType.value!!).collect {
-                    listWine.value += it
+                wineRepository.getWineByType(wineType.value!!).collectLatest {
+                    listWine.value = it
                 }
             }
         }
