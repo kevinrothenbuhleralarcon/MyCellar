@@ -1,15 +1,6 @@
-package ch.kra.myapplication.ui.theme
+package ch.kra.mycellar.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-
-val Red500 = Color(0xFFf44336)
-val Red500Light = Color(0xffff7961)
-val Red500Dark = Color(0xffba000d)
-val Red300 = Color(0xffe57373)
-val Red300Light = Color(0xffffa4a2)
-val Red300Dark = Color(0xffaf4448)
+val BG500Light = Color(0xFF8eacbb)
+val BG500Dark = Color(0xFF34515e)

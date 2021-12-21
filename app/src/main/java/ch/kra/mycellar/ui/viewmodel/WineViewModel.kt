@@ -20,7 +20,7 @@ class WineViewModel @Inject constructor(
     private var _wineType = mutableStateOf(WineType.ALL.resId)
     val wineType get() = _wineType
     var listWine = mutableStateOf<List<Wine>>(listOf())
-    //val listWine: LiveData<List<Wine>> = Transformations.switchMap(_wineType) { _ -> getList() }
+
 
     init {
         changeWineType(WineType.ALL.resId)

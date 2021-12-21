@@ -1,4 +1,4 @@
-package ch.kra.mycellar.other
+package ch.kra.mycellar.util
 
 import android.content.Context
 import ch.kra.mycellar.R

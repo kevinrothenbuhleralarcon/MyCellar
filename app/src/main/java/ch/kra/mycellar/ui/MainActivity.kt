@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import ch.kra.myapplication.ui.theme.MyCellarTheme
+import ch.kra.mycellar.ui.theme.MyCellarTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +38,9 @@ class MainActivity : ComponentActivity() {
                             it.arguments?.getInt("wineId")
                         }
                         
-                        WineListScreen(navigate = { navController.popBackStack() })
+                        WineDetailScreen(wineId = wineId!!) {
+                            navController.popBackStack()
+                        }
                     }
                 }
             }

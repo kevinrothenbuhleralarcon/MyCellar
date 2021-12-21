@@ -1,4 +1,4 @@
-package ch.kra.myapplication.ui.theme
+package ch.kra.mycellar.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -6,25 +6,21 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import ch.kra.myapplication.ui.theme.Shapes
+import ch.kra.myapplication.ui.theme.Typography
 
 private val DarkColorPalette = darkColors(
-    primary = Red300Dark,
-    primaryVariant = Red500,
+    primary = Color.Black,
     onPrimary = Color.White,
-    background = Color.Black,
-    secondary = Red300Dark,
-    onSecondary = Color.White,
+    surface = BG500Dark,
     onSurface = Color.White
 )
 
 private val LightColorPalette = lightColors(
-    primary = Red500,
-    primaryVariant = Red500Light,
-    onPrimary = Color.White,
-    background = Red300Light,
-    secondary = Red300,
-    onSecondary = Color.Black,
-    onSurface = Color.Black
+    primary = Color.White,
+    onPrimary = Color.Black,
+    surface = BG500Light,
+    onSurface = Color.White
 
     /* Other default colors to override
     background = Color.White,

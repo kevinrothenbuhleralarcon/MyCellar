@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Kevin/Documents/01-DocumentsPerso/Dev/Android/MyCellar/app/src/main/res/drawable/baseline_remove_24.xml" value="0.25925925925925924" />
         <entry key="..\:/Kevin/Documents/01-DocumentsPerso/Dev/Android/MyCellar/app/src/main/res/layout/activity_main.xml" value="0.10663627152988855" />
+        <entry key="..\:/Kevin/Documents/01-DocumentsPerso/Dev/Android/MyCellar/app/src/main/res/layout/fragment_item_details.xml" value="0.1884498480243161" />
+        <entry key="..\:/Kevin/Documents/01-DocumentsPerso/Dev/Android/MyCellar/app/src/main/res/layout/fragment_wine_list.xml" value="0.1884498480243161" />
       </map>
     </option>
   </component>

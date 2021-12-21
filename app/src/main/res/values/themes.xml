@@ -4,7 +4,6 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryVariant">@color/red_500_light</item>
-        <item name="android:windowBackground">@color/red_300_light</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <item name="colorSecondary">@color/red_300</item>
