@@ -13,9 +13,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,9 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
+import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
+import ch.kra.mycellar.ui.viewmodels.WineListViewModel
 import ch.kra.mycellar.util.CellarUtility
-import ch.kra.mycellar.ui.viewmodel.WineViewModel
 
 @Composable
 fun WineListScreen(
@@ -66,10 +66,26 @@ fun WineListScreen(
 @Composable
 private fun WineListScreenToolbar(
     modifier: Modifier = Modifier,
+    listViewModel: WineListViewModel = hiltViewModel(),
     navigate: (Int) -> Unit
 ) {
+    var expend by remember {
+        mutableStateOf(false)
+    }
+
+    val currentWineType = listViewModel.wineType.observeAsState(initial = WineType.ALL.resId).value
+
+    val wineTypes = mutableListOf<String>()
+    enumValues<WineType>().forEach {
+        wineTypes.add(
+            CellarUtility.getStringFromWineType(
+                LocalContext.current, it.resId
+            )
+        )
+    }
+
     Row(
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top,
         modifier = modifier
             .background(
@@ -81,39 +97,55 @@ private fun WineListScreenToolbar(
                 )
             )
     ) {
-        Icon(
-            imageVector = Icons.Default.List,
-            contentDescription = null,
-            tint = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .size(30.dp)
-                .offset((-16).dp, 16.dp)
-                .clickable {
-                    /* TODO Sorting */
-                }
+        Text(
+            text = CellarUtility.getStringFromWineType(LocalContext.current, currentWineType),
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.
+                    offset(16.dp, 16.dp)
         )
 
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            tint = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .size(30.dp)
-                .offset((-16).dp, 16.dp)
-                .clickable { navigate(0) }
-        )
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Top,
+        ) {
+            Icon(
+                imageVector = Icons.Default.List,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                    .size(30.dp)
+                    .offset((-16).dp, 16.dp)
+                    .clickable {
+                        expend = true
+                    }
+            )
+            WineDropDown(
+                expend = expend,
+                wineTypes = wineTypes,
+                dismiss = { expend = false },
+                onItemSelected = { listViewModel.changeWineType(it) }
+            )
+
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                    .size(30.dp)
+                    .offset((-16).dp, 16.dp)
+                    .clickable { navigate(0) }
+            )
+        }
     }
 }
 
 @Composable
 private fun WineList(
     modifier: Modifier = Modifier,
-    viewModel: WineViewModel = hiltViewModel(),
+    listViewModel: WineListViewModel = hiltViewModel(),
     onClick: (Int) -> Unit
 ) {
-    val wineList by remember {
-        viewModel.listWine
-    }
+    val wineList = listViewModel.listWine.observeAsState(listOf()).value
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         modifier = modifier
@@ -169,7 +201,7 @@ private fun WineListRow(
 private fun WineCard(
     wine: Wine,
     modifier: Modifier = Modifier,
-    viewModel: WineViewModel = hiltViewModel(),
+    listViewModel: WineListViewModel = hiltViewModel(),
     onClick: (Int) -> Unit
 ) {
     Box(
@@ -228,7 +260,7 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            viewModel.changeQuantity(wine, true)
+                            listViewModel.changeQuantity(wine, true)
                         }
                 )
                 Text(
@@ -244,7 +276,7 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            viewModel.changeQuantity(wine, false)
+                            listViewModel.changeQuantity(wine, false)
                         }
                 )
             }

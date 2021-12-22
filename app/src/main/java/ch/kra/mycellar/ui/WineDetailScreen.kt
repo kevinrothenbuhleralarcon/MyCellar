@@ -8,22 +8,26 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
-import ch.kra.mycellar.ui.viewmodel.WineViewModel
-import kotlinx.coroutines.flow.collectLatest
+import ch.kra.mycellar.WineType
+import ch.kra.mycellar.database.Wine
+import ch.kra.mycellar.ui.viewmodels.WineDetailViewModel
+import ch.kra.mycellar.util.CellarUtility
+import ch.kra.mycellar.util.Ressource
 
 @Composable
 fun WineDetailScreen(
     wineId: Int,
+    viewModel: WineDetailViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
     Surface(
@@ -41,18 +45,46 @@ fun WineDetailScreen(
                     .fillMaxHeight(0.2f),
                 navigateBack = navigateBack
             )
-            WineDetailCore(
-                wineId = wineId,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = 60.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 16.dp
-                    ),
-                navigateBack = navigateBack
-            )
+
+            if (wineId > 0) {
+                val wine = produceState<Ressource<Wine>>(initialValue = Ressource.Loading()) {
+                    value = viewModel.getWine(wineId = wineId)
+                }.value
+
+                WineWrapper(
+                    wine = wine,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = 60.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        ),
+                    loadingModifier = Modifier
+                        .size(100.dp)
+                        .align(Alignment.Center)
+                        .padding(
+                            top = 60.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        ),
+                    navigateBack = navigateBack
+                )
+            } else {
+                addWine(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = 60.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        ),
+                    navigateBack = navigateBack
+                )
+            }
         }
     }
 }
@@ -87,12 +119,74 @@ private fun WineDetailHeader(
 }
 
 @Composable
-private fun WineDetailCore(
-    wineId: Int,
+private fun WineWrapper(
+    wine: Ressource<Wine>,
     modifier: Modifier = Modifier,
-    viewModel: WineViewModel = hiltViewModel(),
+    loadingModifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
+    when (wine) {
+        is Ressource.Success -> {
+            WineDetail(
+                wine = wine.data!!,
+                modifier = modifier,
+                navigateBack = navigateBack
+            )
+        }
+        is Ressource.Error -> {
+            Text(
+                text = wine.message!!,
+                color = Color.Red,
+                modifier = modifier
+            )
+        }
+
+        is Ressource.Loading -> {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.primary,
+                modifier = loadingModifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun WineDetail(
+    wine: Wine,
+    modifier: Modifier = Modifier,
+    viewModel: WineDetailViewModel = hiltViewModel(),
+    navigateBack: () -> Unit
+) {
+    var wineName by remember {
+        mutableStateOf(wine.wineName)
+    }
+
+    var wineType by remember {
+        mutableStateOf(wine.wineType)
+    }
+
+    var offeredBy by remember {
+        mutableStateOf(wine.offeredBy)
+    }
+
+    var quantity by remember {
+        mutableStateOf(wine.quantity.toString())
+    }
+
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
+
+    val wineTypes = mutableListOf<String>()
+    enumValues<WineType>().forEach {
+        wineTypes.add(
+            CellarUtility.getStringFromWineType(
+                LocalContext.current, it.resId
+            )
+        )
+    }
+    wineTypes.removeLast() //remove "all" type
+
     Column(
         modifier = modifier
             .shadow(5.dp, RoundedCornerShape(10.dp))
@@ -101,55 +195,184 @@ private fun WineDetailCore(
             .background(MaterialTheme.colors.primary)
             .padding(16.dp)
     ) {
-        var wineName by remember {
-            mutableStateOf("")
-        }
-        var wineType by remember {
-            mutableStateOf(0)
-        }
-        var offerdBy by remember {
-            mutableStateOf("")
-        }
-        var quantity by remember {
-            mutableStateOf(0)
-        }
+        WineDetailCore(
+            wineName = wineName,
+            wineType = wineType,
+            offeredBy = offeredBy,
+            quantity = quantity,
+            wineTypes = wineTypes,
+            changeWineName = { wineName = it },
+            changeWineType = { wineType = it },
+            changeOfferedBy = { offeredBy = it },
+            changeQuantity = { quantity = it }
+        )
 
-        if (wineId > 0) {
-            LaunchedEffect(key1 = true) {
-                viewModel.getWine(wineId = wineId).collectLatest {
-                    wineName = it.wineName
-                    wineType = it.wineType
-                    offerdBy = it.offeredBy
-                    quantity = it.quantity
-                }
-            }
-        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Box(
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = wineName,
-                onValueChange = {
-                    wineName = it
+            Button(
+                onClick = {
+                    if (viewModel.isEntryValid(
+                            wineName,
+                            quantity
+                        )
+                    ) {
+                        viewModel.updateWine(
+                            wineId = wine.id,
+                            wineName = wineName,
+                            wineType = wineType,
+                            offeredBy = offeredBy,
+                            quantity = quantity
+                        )
+                        navigateBack()
+                    }
                 },
-                maxLines = 1,
-                singleLine = true,
-                textStyle = TextStyle(MaterialTheme.colors.onPrimary),
-                label = {
-                    Text(
-                        text = LocalContext.current.getString(R.string.wine_name_req),
-                        color = MaterialTheme.colors.onPrimary
-                    )
+                colors =
+                ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+            )
+            {
+                Text(
+                    text = LocalContext.current.getString(R.string.save),
+                    color = MaterialTheme.colors.onSurface
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Button(
+                onClick = {
+                    openDialog = true
                 },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colors.onPrimary,
-                    unfocusedBorderColor = MaterialTheme.colors.onPrimary),
+                colors =
+                ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
                 modifier = Modifier
                     .fillMaxWidth()
+            ) {
+                Text(
+                    text = LocalContext.current.getString(R.string.delete),
+                    color = MaterialTheme.colors.onSurface
+                )
+            }
+
+            if (openDialog) {
+                AlertDialog(
+                    onDismissRequest = { },
+                    title = {
+                        Text(text = LocalContext.current.getString(R.string.dialog_confirmation_title))
+                    },
+                    text = {
+                        Text(text = LocalContext.current.getString(R.string.dialog_confirmation_message))
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                openDialog = false
+                                viewModel.deleteWine(wine)
+                                navigateBack()
+                            })
+                        {
+                            Text(text = LocalContext.current.getString(R.string.dialog_confirmation_positive))
+                        }
+                    },
+                    dismissButton =  {
+                        Button(
+                            onClick = { openDialog = false }
+                        ) {
+                            Text(text = LocalContext.current.getString(R.string.dialog_confirmation_negative))
+                        }
+                    }
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun addWine(
+    modifier: Modifier = Modifier,
+    viewModel: WineDetailViewModel = hiltViewModel(),
+    navigateBack: () -> Unit
+) {
+    var wineName by remember {
+        mutableStateOf("")
+    }
+
+    var wineType by remember {
+        mutableStateOf(1)
+    }
+
+    var offeredBy by remember {
+        mutableStateOf("")
+    }
+
+    var quantity by remember {
+        mutableStateOf("")
+    }
+
+    val wineTypes = mutableListOf<String>()
+    enumValues<WineType>().forEach {
+        wineTypes.add(
+            CellarUtility.getStringFromWineType(
+                LocalContext.current, it.resId
+            )
+        )
+    }
+    wineTypes.removeLast() //remove "all" type
+
+    Column(
+        modifier = modifier
+            .shadow(5.dp, RoundedCornerShape(10.dp))
+            .padding(5.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colors.primary)
+            .padding(16.dp)
+    ) {
+        WineDetailCore(
+            wineName = wineName,
+            wineType = wineType,
+            offeredBy = offeredBy,
+            quantity = quantity,
+            wineTypes = wineTypes,
+            changeWineName = { wineName = it },
+            changeWineType = { wineType = it },
+            changeOfferedBy = { offeredBy = it },
+            changeQuantity = { quantity = it }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                if (viewModel.isEntryValid(
+                        wineName,
+                        quantity
+                    )
+                ) {
+                    viewModel.addWine(
+                        wineName,
+                        wineType,
+                        quantity,
+                        offeredBy
+                    )
+                    navigateBack()
+                }
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = LocalContext.current.getString(R.string.save),
+                color = MaterialTheme.colors.onPrimary
             )
         }
     }
 }
+

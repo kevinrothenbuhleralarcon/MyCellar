@@ -1,15 +1,11 @@
 <resources>
     <string name="app_name">MyCellar</string>
-    <string name="wine_name_req">Wine Name <font color='#FF0000'>*</font></string>
-    <string name="wine_type">Type of wine <font color='#FF0000'>*</font></string>
+    <string name="wine_type">Type of wine</string>
     <string name="offered_by">Offered by</string>
-    <string name="quantity_req">Quantity <font color='#FF0000'>*</font></string>
     <string name="quantity">Quantity</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-    <string name="view_cellar">Show cellar</string>
     <string name="wine_name">Wine name</string>
-    <string name="wine_list_fragment_title">{wineType}</string>
     <string name="dialog_confirmation_title">Confirmation</string>
     <string name="dialog_confirmation_message">Are you sure you want to delete this item?</string>
     <string name="dialog_confirmation_positive">Yes</string>

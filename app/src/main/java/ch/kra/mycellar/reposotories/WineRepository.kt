@@ -2,6 +2,7 @@ package ch.kra.mycellar.reposotories
 
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.database.WineDao
+import ch.kra.mycellar.util.Ressource
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
@@ -13,7 +14,15 @@ class WineRepository @Inject constructor(
 
     fun getWineByType(wineType: Int) = wineDao.getByWineType(wineType = wineType)
 
-    fun getWine(wineId: Int) = wineDao.getWine(wineId = wineId)
+    suspend fun getWine(wineId: Int): Ressource<Wine> {
+        val response = try {
+            wineDao.getWine(wineId = wineId)
+        } catch (e: Exception) {
+            println(e)
+            return Ressource.Error(message = "An unknown error has occurred.")
+        }
+        return Ressource.Success(response)
+    }
 
     suspend fun insert(wine: Wine) = wineDao.insert(wine)
 

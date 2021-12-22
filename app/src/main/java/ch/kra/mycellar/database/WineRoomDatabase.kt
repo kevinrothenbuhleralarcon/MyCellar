@@ -85,7 +85,7 @@ abstract class WineRoomDatabase : RoomDatabase() {
                 2131689595 -> WineType.WHITE_WINE.resId
                 2131689589 -> WineType.ROSE_WINE.resId
                 2131689592 -> WineType.SPARKLING_WINE.resId
-                else -> WineType.ALL.resId
+                else -> WineType.RED_WINE.resId
             }
         }
     }
