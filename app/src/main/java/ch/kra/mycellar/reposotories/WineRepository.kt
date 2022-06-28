@@ -3,18 +3,15 @@ package ch.kra.mycellar.reposotories
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.database.WineDao
 import ch.kra.mycellar.util.Ressource
-import dagger.hilt.android.scopes.ViewModelScoped
-import javax.inject.Inject
 
-@ViewModelScoped
-class WineRepository @Inject constructor(
+class WineRepository(
     private val wineDao: WineDao
-) {
-    fun getAllWine() = wineDao.getAll()
+) : IWineRepository {
+    override fun getAllWine() = wineDao.getAll()
 
-    fun getWineByType(wineType: Int) = wineDao.getByWineType(wineType = wineType)
+    override fun getWineByType(wineType: Int) = wineDao.getByWineType(wineType = wineType)
 
-    suspend fun getWine(wineId: Int): Ressource<Wine> {
+    override suspend fun getWine(wineId: Int): Ressource<Wine> {
         val response = try {
             wineDao.getWine(wineId = wineId)
         } catch (e: Exception) {
@@ -24,9 +21,9 @@ class WineRepository @Inject constructor(
         return Ressource.Success(response)
     }
 
-    suspend fun insert(wine: Wine) = wineDao.insert(wine)
+    override suspend fun insert(wine: Wine) = wineDao.insert(wine)
 
-    suspend fun delete(wine: Wine) = wineDao.delete(wine)
+    override suspend fun delete(wine: Wine) = wineDao.delete(wine)
 
-    suspend fun update(wine: Wine) = wineDao.update(wine)
+    override suspend fun update(wine: Wine) = wineDao.update(wine)
 }

@@ -3,7 +3,8 @@ package ch.kra.mycellar.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.reposotories.WineRepository
+import ch.kra.mycellar.reposotories.IWineRepository
+import ch.kra.mycellar.util.DispatcherProvider
 import ch.kra.mycellar.util.Ressource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WineDetailViewModel @Inject constructor(
-    private val wineRepository: WineRepository
+    private val wineRepository: IWineRepository,
+    private val dispatchers: DispatcherProvider
 ): ViewModel() {
 
     suspend fun getWine(wineId: Int): Ressource<Wine> {
@@ -59,13 +61,13 @@ class WineDetailViewModel @Inject constructor(
     }
 
     private fun updateWine(wine: Wine) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             wineRepository.update(wine)
         }
     }
 
     private fun insertWine(wine: Wine) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io){
             wineRepository.insert(wine)
         }
     }

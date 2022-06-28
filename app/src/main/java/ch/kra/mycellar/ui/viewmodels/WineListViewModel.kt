@@ -3,14 +3,14 @@ package ch.kra.mycellar.ui.viewmodels
 import androidx.lifecycle.*
 import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.reposotories.WineRepository
+import ch.kra.mycellar.reposotories.IWineRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WineListViewModel @Inject constructor(
-    private val wineRepository: WineRepository
+    private val wineRepository: IWineRepository
 ) : ViewModel() {
 
     private var _wineType = MutableLiveData(WineType.ALL.resId)
