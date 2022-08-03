@@ -22,8 +22,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +33,6 @@ import ch.kra.mycellar.cellar.data.local.entity.Wine
 import ch.kra.mycellar.cellar.domain.WineType
 import ch.kra.mycellar.cellar.presentation.wine_list.WineListViewModel
 import ch.kra.mycellar.ui.WineDropDown
-import ch.kra.mycellar.util.CellarUtility
 
 @Composable
 fun WineListScreen(
@@ -74,15 +73,11 @@ private fun WineListScreenToolbar(
         mutableStateOf(false)
     }
 
-    val currentWineType = listViewModel.wineType.observeAsState(initial = WineType.ALL.resId).value
+    val currentWineType = listViewModel.wineType.observeAsState(initial = WineType.ALL).value
 
     val wineTypes = mutableListOf<String>()
     enumValues<WineType>().forEach {
-        wineTypes.add(
-            CellarUtility.getStringFromWineType(
-                LocalContext.current, it.resId
-            )
-        )
+        wineTypes.add(stringResource(id = it.resId))
     }
 
     Row(
@@ -99,7 +94,7 @@ private fun WineListScreenToolbar(
             )
     ) {
         Text(
-            text = CellarUtility.getStringFromWineType(LocalContext.current, currentWineType),
+            text = stringResource(id = currentWineType.resId),
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier.
                     offset(16.dp, 16.dp)
@@ -217,12 +212,7 @@ private fun WineCard(
     ) {
 
         Image(
-            painter = painterResource(
-                id = CellarUtility.getBackgroundIdFromType(
-                    LocalContext.current,
-                    wine.wineType
-                )
-            ),
+            painter = painterResource(id = wine.wineType.drawableId),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alpha = 0.5f,
@@ -244,7 +234,7 @@ private fun WineCard(
                 color = MaterialTheme.colors.onPrimary
             )
             Text(
-                text = wine.offeredBy,
+                text = wine.offeredBy ?: "",
                 fontSize = 20.sp,
                 color = MaterialTheme.colors.onPrimary
             )

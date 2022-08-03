@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -20,16 +21,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ch.kra.mycellar.R
+import ch.kra.mycellar.cellar.domain.WineType
 
 @Composable
 fun WineDetailCore(
     wineName: String,
-    wineType: Int,
-    offeredBy: String,
+    wineType: WineType,
+    offeredBy: String?,
     quantity: String,
     wineTypes: List<String>,
     changeWineName: (String) -> Unit,
-    changeWineType: (Int) -> Unit,
+    changeWineType: (WineType) -> Unit,
     changeOfferedBy: (String) -> Unit,
     changeQuantity: (String) -> Unit
 ) {
@@ -80,7 +82,7 @@ fun WineDetailCore(
                 .fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = wineTypes[wineType - 1],
+                value = stringResource(id = wineType.resId),
                 onValueChange = {
 
                 },
@@ -127,7 +129,7 @@ fun WineDetailCore(
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = offeredBy,
+            value = offeredBy ?: "",
             onValueChange = {
                 changeOfferedBy(it)
             },
@@ -193,7 +195,7 @@ fun WineDropDown(
     expend: Boolean,
     wineTypes: List<String>,
     dismiss: () -> Unit,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (WineType) -> Unit
 ) {
     DropdownMenu(
         expanded = expend,
@@ -201,15 +203,15 @@ fun WineDropDown(
         modifier = Modifier
             .background(MaterialTheme.colors.primary)
     ) {
-        wineTypes.forEach { type ->
+        enumValues<WineType>().forEach { type ->
             DropdownMenuItem(
                 onClick = {
-                    onItemSelected(wineTypes.indexOf(type) + 1)
+                    onItemSelected(type)
                     dismiss()
                 }
             ) {
                 Text(
-                    text = type,
+                    text = stringResource(id = type.resId),
                     color = MaterialTheme.colors.onPrimary,
                 )
             }

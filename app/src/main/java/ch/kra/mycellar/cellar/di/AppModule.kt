@@ -30,6 +30,7 @@ object AppModule {
     )
         .addMigrations(WineRoomDatabase.MIGRATION_1_2)
         .addMigrations(WineRoomDatabase.MIGRATION_2_3)
+        .addMigrations(WineRoomDatabase.MIGRATION_3_4)
         .build()
 
     @Singleton

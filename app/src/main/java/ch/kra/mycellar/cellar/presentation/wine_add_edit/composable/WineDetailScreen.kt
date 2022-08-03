@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
@@ -22,7 +23,6 @@ import ch.kra.mycellar.cellar.data.local.entity.Wine
 import ch.kra.mycellar.cellar.domain.WineType
 import ch.kra.mycellar.cellar.presentation.wine_add_edit.WineDetailViewModel
 import ch.kra.mycellar.ui.WineDetailCore
-import ch.kra.mycellar.util.CellarUtility
 import ch.kra.mycellar.util.Resource
 
 @Composable
@@ -180,11 +180,7 @@ private fun WineDetail(
 
     val wineTypes = mutableListOf<String>()
     enumValues<WineType>().forEach {
-        wineTypes.add(
-            CellarUtility.getStringFromWineType(
-                LocalContext.current, it.resId
-            )
-        )
+        wineTypes.add(stringResource(id = it.resId))
     }
     wineTypes.removeLast() //remove "all" type
 
@@ -306,7 +302,7 @@ private fun addWine(
     }
 
     var wineType by remember {
-        mutableStateOf(1)
+        mutableStateOf(WineType.RED_WINE)
     }
 
     var offeredBy by remember {
@@ -319,11 +315,7 @@ private fun addWine(
 
     val wineTypes = mutableListOf<String>()
     enumValues<WineType>().forEach {
-        wineTypes.add(
-            CellarUtility.getStringFromWineType(
-                LocalContext.current, it.resId
-            )
-        )
+        wineTypes.add(stringResource(id = it.resId))
     }
     wineTypes.removeLast() //remove "all" type
 

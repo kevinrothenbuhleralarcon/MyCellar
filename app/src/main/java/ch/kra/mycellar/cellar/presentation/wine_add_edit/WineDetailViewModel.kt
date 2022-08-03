@@ -3,6 +3,7 @@ package ch.kra.mycellar.cellar.presentation.wine_add_edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
 import ch.kra.mycellar.cellar.domain.repository.IWineRepository
 import ch.kra.mycellar.core.DispatcherProvider
 import ch.kra.mycellar.util.Resource
@@ -27,11 +28,11 @@ class WineDetailViewModel @Inject constructor(
         return true
     }
 
-    fun updateWine(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String){
+    fun updateWine(wineId: Int, wineName: String, wineType: WineType, quantity: String, offeredBy: String?){
         updateWine(getUpdateWineEntry(wineId, wineName, wineType, quantity, offeredBy))
     }
 
-    fun addWine(wineName: String, wineType: Int, quantity: String, offeredBy: String) {
+    fun addWine(wineName: String, wineType: WineType, quantity: String, offeredBy: String?) {
         insertWine(getNewWineEntry(wineName, wineType, quantity, offeredBy))
     }
 
@@ -41,7 +42,7 @@ class WineDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getNewWineEntry(wineName: String, wineType: Int, quantity: String, offeredBy: String): Wine {
+    private fun getNewWineEntry(wineName: String, wineType: WineType, quantity: String, offeredBy: String?): Wine {
         return Wine(
             wineName = wineName,
             wineType = wineType,
@@ -50,7 +51,7 @@ class WineDetailViewModel @Inject constructor(
         )
     }
 
-    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String): Wine {
+    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: WineType, quantity: String, offeredBy: String?): Wine {
         return Wine(
             id = wineId,
             wineName = wineName,

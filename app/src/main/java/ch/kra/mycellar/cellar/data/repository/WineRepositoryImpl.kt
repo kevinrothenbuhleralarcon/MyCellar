@@ -2,6 +2,7 @@ package ch.kra.mycellar.cellar.data.repository
 
 import ch.kra.mycellar.cellar.data.local.dao.WineDao
 import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
 import ch.kra.mycellar.cellar.domain.repository.IWineRepository
 import ch.kra.mycellar.util.Resource
 
@@ -10,7 +11,7 @@ class WineRepositoryImpl(
 ) : IWineRepository {
     override fun getAllWine() = wineDao.getAll()
 
-    override fun getWineByType(wineType: Int) = wineDao.getByWineType(wineType = wineType)
+    override fun getWineByType(wineType: WineType) = wineDao.getByWineType(wineType = wineType.name)
 
     override suspend fun getWine(wineId: Int): Resource<Wine> {
         val response = try {

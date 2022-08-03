@@ -15,19 +15,19 @@ class WineListViewModel @Inject constructor(
     private val wineRepository: IWineRepository
 ) : ViewModel() {
 
-    private var _wineType = MutableLiveData(WineType.ALL.resId)
-    val wineType: LiveData<Int> get() = _wineType
+    private var _wineType = MutableLiveData(WineType.ALL)
+    val wineType: LiveData<WineType> get() = _wineType
     //var listWine = mutableStateOf<List<Wine>>(listOf())
     val listWine: LiveData<List<Wine>> = Transformations.switchMap(_wineType) { _ -> getList() }
 
 
-    fun changeWineType(wineType: Int) {
+    fun changeWineType(wineType: WineType) {
         _wineType.value = wineType
         getList()
     }
 
     private fun getList(): LiveData<List<Wine>> {
-        return if (wineType.value == WineType.ALL.resId) {
+        return if (wineType.value == WineType.ALL) {
             wineRepository.getAllWine().flowOn(Dispatchers.IO).asLiveData()
         } else {
             wineRepository.getWineByType(wineType.value!!).flowOn(Dispatchers.IO).asLiveData()
@@ -65,7 +65,7 @@ class WineListViewModel @Inject constructor(
         }
     }
 
-    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String): Wine {
+    private fun getUpdateWineEntry(wineId: Int, wineName: String, wineType: WineType, quantity: String, offeredBy: String?): Wine {
         return Wine(
             id = wineId,
             wineName = wineName,
@@ -75,7 +75,7 @@ class WineListViewModel @Inject constructor(
         )
     }
 
-    private fun updateWine(wineId: Int, wineName: String, wineType: Int, quantity: String, offeredBy: String){
+    private fun updateWine(wineId: Int, wineName: String, wineType: WineType, quantity: String, offeredBy: String?){
         updateWine(getUpdateWineEntry(wineId, wineName, wineType, quantity, offeredBy))
     }
 
