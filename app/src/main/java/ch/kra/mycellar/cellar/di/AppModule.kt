@@ -5,7 +5,7 @@ import androidx.room.Room
 import ch.kra.mycellar.cellar.data.local.WineRoomDatabase
 import ch.kra.mycellar.cellar.data.local.dao.WineDao
 import ch.kra.mycellar.cellar.data.repository.WineRepositoryImpl
-import ch.kra.mycellar.cellar.domain.repository.IWineRepository
+import ch.kra.mycellar.cellar.domain.repository.WineRepository
 import ch.kra.mycellar.core.DefaultDispatchers
 import ch.kra.mycellar.core.DispatcherProvider
 import dagger.Module
@@ -39,7 +39,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideWineRepository(wineDao: WineDao): IWineRepository {
+    fun provideWineRepository(wineDao: WineDao): WineRepository {
         return WineRepositoryImpl(wineDao)
     }
 

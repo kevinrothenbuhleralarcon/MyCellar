@@ -5,20 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -73,7 +66,7 @@ private fun WineListScreenToolbar(
         mutableStateOf(false)
     }
 
-    val currentWineType = listViewModel.wineType.observeAsState(initial = WineType.ALL).value
+    val wineListState = listViewModel.wineListState.value
 
     val wineTypes = mutableListOf<String>()
     enumValues<WineType>().forEach {
@@ -94,7 +87,7 @@ private fun WineListScreenToolbar(
             )
     ) {
         Text(
-            text = stringResource(id = currentWineType.resId),
+            text = stringResource(id = wineListState.wineType.resId),
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier.
                     offset(16.dp, 16.dp)
@@ -141,18 +134,19 @@ private fun WineList(
     listViewModel: WineListViewModel = hiltViewModel(),
     onClick: (Int) -> Unit
 ) {
-    val wineList = listViewModel.listWine.observeAsState(listOf()).value
+    val wineListState = listViewModel.wineListState.value
+    //val wineList = listViewModel.listWine.collectAsState(initial = emptyList()).value
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         modifier = modifier
     ) {
-        val itemCount = if (wineList.size % 2 == 0) {
-            wineList.size / 2
+        val itemCount = if (wineListState.wineList.size % 2 == 0) {
+            wineListState.wineList.size / 2
         } else {
-            wineList.size / 2 + 1
+            wineListState.wineList.size / 2 + 1
         }
         items(itemCount) {
-            WineListRow(rowNumber = it, wineList = wineList, onClick = onClick)
+            WineListRow(rowNumber = it, wineList = wineListState.wineList, onClick = onClick)
         }
     }
 }
@@ -200,17 +194,12 @@ private fun WineCard(
     listViewModel: WineListViewModel = hiltViewModel(),
     onClick: (Int) -> Unit
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
+    Card(
         modifier = modifier
             .clickable { onClick(wine.id) }
-            .shadow(5.dp, RoundedCornerShape(10.dp))
-            .padding(5.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colors.primary)
-
+            .padding(5.dp),
+        elevation = 5.dp
     ) {
-
         Image(
             painter = painterResource(id = wine.wineType.drawableId),
             contentDescription = null,
@@ -218,7 +207,6 @@ private fun WineCard(
             alpha = 0.5f,
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(10.dp))
         )
 
         Column(

@@ -5,10 +5,11 @@ import ch.kra.mycellar.cellar.domain.WineType
 import ch.kra.mycellar.util.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface IWineRepository {
+interface WineRepository {
     fun getAllWine(): Flow<List<Wine>>
     fun getWineByType(wineType: WineType): Flow<List<Wine>>
 
+    //fun getWine(wineId: Int): Flow<Wine>
     suspend fun getWine(wineId: Int): Resource<Wine>
 
     suspend fun insert(wine: Wine)

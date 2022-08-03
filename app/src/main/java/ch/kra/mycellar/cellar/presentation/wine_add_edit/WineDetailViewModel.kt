@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.kra.mycellar.cellar.data.local.entity.Wine
 import ch.kra.mycellar.cellar.domain.WineType
-import ch.kra.mycellar.cellar.domain.repository.IWineRepository
+import ch.kra.mycellar.cellar.domain.repository.WineRepository
 import ch.kra.mycellar.core.DispatcherProvider
 import ch.kra.mycellar.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WineDetailViewModel @Inject constructor(
-    private val wineRepository: IWineRepository,
+    private val wineRepository: WineRepository,
     private val dispatchers: DispatcherProvider
 ): ViewModel() {
 
