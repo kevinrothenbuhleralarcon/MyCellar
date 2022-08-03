@@ -1,6 +1,7 @@
-package ch.kra.mycellar.database
+package ch.kra.mycellar.cellar.data.local.dao
 
 import androidx.room.*
+import ch.kra.mycellar.cellar.data.local.entity.Wine
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,9 +1,9 @@
-package ch.kra.mycellar.ui.viewmodels
+package ch.kra.mycellar.cellar.presentation.wine_list
 
 import androidx.lifecycle.*
-import ch.kra.mycellar.WineType
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.reposotories.IWineRepository
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
+import ch.kra.mycellar.cellar.domain.repository.IWineRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn

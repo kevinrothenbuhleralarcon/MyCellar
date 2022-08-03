@@ -2,7 +2,7 @@ package ch.kra.mycellar.util
 
 import android.content.Context
 import ch.kra.mycellar.R
-import ch.kra.mycellar.WineType
+import ch.kra.mycellar.cellar.domain.WineType
 
 object CellarUtility {
 

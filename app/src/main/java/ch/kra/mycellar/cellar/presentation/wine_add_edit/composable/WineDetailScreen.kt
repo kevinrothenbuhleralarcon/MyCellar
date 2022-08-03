@@ -1,4 +1,4 @@
-package ch.kra.mycellar.ui
+package ch.kra.mycellar.cellar.presentation.wine_add_edit.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,11 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
-import ch.kra.mycellar.WineType
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.ui.viewmodels.WineDetailViewModel
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
+import ch.kra.mycellar.cellar.presentation.wine_add_edit.WineDetailViewModel
+import ch.kra.mycellar.ui.WineDetailCore
 import ch.kra.mycellar.util.CellarUtility
-import ch.kra.mycellar.util.Ressource
+import ch.kra.mycellar.util.Resource
 
 @Composable
 fun WineDetailScreen(
@@ -47,7 +48,7 @@ fun WineDetailScreen(
             )
 
             if (wineId > 0) {
-                val wine = produceState<Ressource<Wine>>(initialValue = Ressource.Loading()) {
+                val wine = produceState<Resource<Wine>>(initialValue = Resource.Loading()) {
                     value = viewModel.getWine(wineId = wineId)
                 }.value
 
@@ -120,20 +121,20 @@ private fun WineDetailHeader(
 
 @Composable
 private fun WineWrapper(
-    wine: Ressource<Wine>,
+    wine: Resource<Wine>,
     modifier: Modifier = Modifier,
     loadingModifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
     when (wine) {
-        is Ressource.Success -> {
+        is Resource.Success -> {
             WineDetail(
                 wine = wine.data!!,
                 modifier = modifier,
                 navigateBack = navigateBack
             )
         }
-        is Ressource.Error -> {
+        is Resource.Error -> {
             Text(
                 text = wine.message!!,
                 color = Color.Red,
@@ -141,7 +142,7 @@ private fun WineWrapper(
             )
         }
 
-        is Ressource.Loading -> {
+        is Resource.Loading -> {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.primary,
                 modifier = loadingModifier

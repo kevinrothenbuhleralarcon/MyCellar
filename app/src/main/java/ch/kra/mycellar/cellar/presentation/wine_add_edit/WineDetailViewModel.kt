@@ -1,11 +1,11 @@
-package ch.kra.mycellar.ui.viewmodels
+package ch.kra.mycellar.cellar.presentation.wine_add_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.reposotories.IWineRepository
-import ch.kra.mycellar.util.DispatcherProvider
-import ch.kra.mycellar.util.Ressource
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.repository.IWineRepository
+import ch.kra.mycellar.core.DispatcherProvider
+import ch.kra.mycellar.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +16,7 @@ class WineDetailViewModel @Inject constructor(
     private val dispatchers: DispatcherProvider
 ): ViewModel() {
 
-    suspend fun getWine(wineId: Int): Ressource<Wine> {
+    suspend fun getWine(wineId: Int): Resource<Wine> {
         return wineRepository.getWine(wineId)
     }
 

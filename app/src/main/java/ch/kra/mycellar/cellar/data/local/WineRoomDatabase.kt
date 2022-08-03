@@ -1,4 +1,4 @@
-package ch.kra.mycellar.database
+package ch.kra.mycellar.cellar.data.local
 
 import android.annotation.SuppressLint
 import androidx.room.Database
@@ -6,9 +6,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
-import ch.kra.mycellar.WineType
+import ch.kra.mycellar.cellar.data.local.dao.WineDao
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
 
-@Database(entities = arrayOf(Wine::class), version = 3)
+@Database(entities = [Wine::class], version = 3, exportSchema = false)
 abstract class WineRoomDatabase : RoomDatabase() {
     abstract fun wineDao(): WineDao
 

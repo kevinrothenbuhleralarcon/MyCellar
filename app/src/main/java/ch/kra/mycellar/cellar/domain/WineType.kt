@@ -1,4 +1,4 @@
-package ch.kra.mycellar
+package ch.kra.mycellar.cellar.domain
 
 enum class WineType(val resId: Int) {
     RED_WINE(1),

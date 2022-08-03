@@ -1,5 +1,6 @@
 package ch.kra.mycellar.util
 
+import ch.kra.mycellar.core.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

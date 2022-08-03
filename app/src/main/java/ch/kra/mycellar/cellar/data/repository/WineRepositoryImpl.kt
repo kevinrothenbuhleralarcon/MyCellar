@@ -1,24 +1,25 @@
-package ch.kra.mycellar.reposotories
+package ch.kra.mycellar.cellar.data.repository
 
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.database.WineDao
-import ch.kra.mycellar.util.Ressource
+import ch.kra.mycellar.cellar.data.local.dao.WineDao
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.repository.IWineRepository
+import ch.kra.mycellar.util.Resource
 
-class WineRepository(
+class WineRepositoryImpl(
     private val wineDao: WineDao
 ) : IWineRepository {
     override fun getAllWine() = wineDao.getAll()
 
     override fun getWineByType(wineType: Int) = wineDao.getByWineType(wineType = wineType)
 
-    override suspend fun getWine(wineId: Int): Ressource<Wine> {
+    override suspend fun getWine(wineId: Int): Resource<Wine> {
         val response = try {
             wineDao.getWine(wineId = wineId)
         } catch (e: Exception) {
             println(e)
-            return Ressource.Error(message = "An unknown error has occurred.")
+            return Resource.Error(message = "An unknown error has occurred.")
         }
-        return Ressource.Success(response)
+        return Resource.Success(response)
     }
 
     override suspend fun insert(wine: Wine) = wineDao.insert(wine)

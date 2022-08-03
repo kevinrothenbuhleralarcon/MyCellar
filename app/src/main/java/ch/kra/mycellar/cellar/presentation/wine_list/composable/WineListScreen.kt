@@ -1,4 +1,4 @@
-package ch.kra.mycellar.ui
+package ch.kra.mycellar.cellar.presentation.wine_list.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,9 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
-import ch.kra.mycellar.WineType
-import ch.kra.mycellar.database.Wine
-import ch.kra.mycellar.ui.viewmodels.WineListViewModel
+import ch.kra.mycellar.cellar.data.local.entity.Wine
+import ch.kra.mycellar.cellar.domain.WineType
+import ch.kra.mycellar.cellar.presentation.wine_list.WineListViewModel
+import ch.kra.mycellar.ui.WineDropDown
 import ch.kra.mycellar.util.CellarUtility
 
 @Composable

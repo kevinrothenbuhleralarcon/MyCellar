@@ -9,6 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ch.kra.mycellar.cellar.presentation.wine_add_edit.composable.WineDetailScreen
+import ch.kra.mycellar.cellar.presentation.wine_list.composable.WineListScreen
 import ch.kra.mycellar.ui.theme.MyCellarTheme
 import dagger.hilt.android.AndroidEntryPoint
 

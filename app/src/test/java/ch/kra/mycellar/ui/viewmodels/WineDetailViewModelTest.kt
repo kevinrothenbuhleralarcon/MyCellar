@@ -2,7 +2,7 @@ package ch.kra.mycellar.ui.viewmodels
 
 import ch.kra.mycellar.MainDispatcherRule
 import ch.kra.mycellar.repositories.FakeWineRepository
-import ch.kra.mycellar.util.DispatcherProvider
+import ch.kra.mycellar.core.DispatcherProvider
 import ch.kra.mycellar.util.TestDispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle

@@ -1,4 +1,4 @@
-package ch.kra.mycellar.util
+package ch.kra.mycellar.core
 
 import kotlinx.coroutines.CoroutineDispatcher
 

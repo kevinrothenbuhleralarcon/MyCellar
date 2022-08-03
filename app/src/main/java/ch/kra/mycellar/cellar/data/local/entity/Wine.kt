@@ -1,4 +1,4 @@
-package ch.kra.mycellar.database
+package ch.kra.mycellar.cellar.data.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
