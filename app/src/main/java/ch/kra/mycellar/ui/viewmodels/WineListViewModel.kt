@@ -5,6 +5,8 @@ import ch.kra.mycellar.WineType
 import ch.kra.mycellar.database.Wine
 import ch.kra.mycellar.reposotories.IWineRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,9 +28,9 @@ class WineListViewModel @Inject constructor(
 
     private fun getList(): LiveData<List<Wine>> {
         return if (wineType.value == WineType.ALL.resId) {
-            wineRepository.getAllWine().asLiveData()
+            wineRepository.getAllWine().flowOn(Dispatchers.IO).asLiveData()
         } else {
-            wineRepository.getWineByType(wineType.value!!).asLiveData()
+            wineRepository.getWineByType(wineType.value!!).flowOn(Dispatchers.IO).asLiveData()
         }
     }
 
