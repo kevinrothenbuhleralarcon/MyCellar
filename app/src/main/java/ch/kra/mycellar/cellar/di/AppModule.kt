@@ -6,6 +6,8 @@ import ch.kra.mycellar.cellar.data.local.WineRoomDatabase
 import ch.kra.mycellar.cellar.data.local.dao.WineDao
 import ch.kra.mycellar.cellar.data.repository.WineRepositoryImpl
 import ch.kra.mycellar.cellar.domain.repository.WineRepository
+import ch.kra.mycellar.cellar.domain.use_case.IncreaseDecreaseWineQuantity
+import ch.kra.mycellar.cellar.domain.use_case.UpdateWine
 import ch.kra.mycellar.core.DefaultDispatchers
 import ch.kra.mycellar.core.DispatcherProvider
 import dagger.Module
@@ -48,4 +50,12 @@ object AppModule {
     fun provideDispatchers(): DispatcherProvider {
         return DefaultDispatchers()
     }
+
+    @Singleton
+    @Provides
+    fun provideUpdateWine(wineRepository: WineRepository) = UpdateWine(wineRepository)
+
+    @Singleton
+    @Provides
+    fun provideIncreaseDecreaseWineQuantity(updateWine: UpdateWine) = IncreaseDecreaseWineQuantity(updateWine)
 }
