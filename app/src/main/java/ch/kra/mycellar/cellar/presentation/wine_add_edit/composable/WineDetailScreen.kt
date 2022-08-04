@@ -47,7 +47,7 @@ fun WineDetailScreen(
                 navigateBack = navigateBack
             )
 
-            if (wineId > 0) {
+            if (wineId > -1) {
                 val wine = produceState<Resource<Wine>>(initialValue = Resource.Loading()) {
                     value = viewModel.getWine(wineId = wineId)
                 }.value
