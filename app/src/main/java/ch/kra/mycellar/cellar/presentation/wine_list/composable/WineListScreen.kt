@@ -24,13 +24,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ch.kra.mycellar.R
 import ch.kra.mycellar.cellar.data.local.entity.Wine
 import ch.kra.mycellar.cellar.domain.WineType
+import ch.kra.mycellar.cellar.presentation.wine_list.WineListEvent
 import ch.kra.mycellar.cellar.presentation.wine_list.WineListViewModel
+import ch.kra.mycellar.core.UIEvent
 import ch.kra.mycellar.ui.WineDropDown
 
 @Composable
 fun WineListScreen(
-    navigate: (Int) -> Unit
+    navigate: (UIEvent.Navigate) -> Unit,
+    listViewModel: WineListViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = true) {
+        listViewModel.uiEvent.collect { event ->
+            when (event) {
+                is UIEvent.Navigate -> {
+                    navigate(event)
+                }
+
+                is UIEvent.PopBackStack -> {
+                    //Nothing
+                }
+            }
+        }
+    }
+
     Surface(
         color = MaterialTheme.colors.surface,
         modifier = Modifier
@@ -45,12 +62,10 @@ fun WineListScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.2f),
-                navigate = navigate
             )
             WineList(
                 modifier = Modifier
                     .padding(top = 60.dp),
-                onClick = navigate
             )
         }
     }
@@ -60,7 +75,6 @@ fun WineListScreen(
 private fun WineListScreenToolbar(
     modifier: Modifier = Modifier,
     listViewModel: WineListViewModel = hiltViewModel(),
-    navigate: (Int) -> Unit
 ) {
     var expend by remember {
         mutableStateOf(false)
@@ -89,8 +103,7 @@ private fun WineListScreenToolbar(
         Text(
             text = stringResource(id = wineListState.wineType.resId),
             color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.
-                    offset(16.dp, 16.dp)
+            modifier = Modifier.offset(16.dp, 16.dp)
         )
 
         Row(
@@ -112,7 +125,7 @@ private fun WineListScreenToolbar(
                 expend = expend,
                 wineTypes = wineTypes,
                 dismiss = { expend = false },
-                onItemSelected = { listViewModel.changeWineType(it) }
+                onItemSelected = { listViewModel.onEvent(WineListEvent.WineTypeSelected(it)) }
             )
 
             Icon(
@@ -122,7 +135,7 @@ private fun WineListScreenToolbar(
                 modifier = Modifier
                     .size(30.dp)
                     .offset((-16).dp, 16.dp)
-                    .clickable { navigate(0) }
+                    .clickable { listViewModel.onEvent(WineListEvent.AddNewWine) }
             )
         }
     }
@@ -132,7 +145,6 @@ private fun WineListScreenToolbar(
 private fun WineList(
     modifier: Modifier = Modifier,
     listViewModel: WineListViewModel = hiltViewModel(),
-    onClick: (Int) -> Unit
 ) {
     val wineListState = listViewModel.wineListState.value
     //val wineList = listViewModel.listWine.collectAsState(initial = emptyList()).value
@@ -146,7 +158,9 @@ private fun WineList(
             wineListState.wineList.size / 2 + 1
         }
         items(itemCount) {
-            WineListRow(rowNumber = it, wineList = wineListState.wineList, onClick = onClick)
+            WineListRow(rowNumber = it, wineList = wineListState.wineList, onClick = { wineId ->
+                listViewModel.onEvent(WineListEvent.WineSelected(wineId))
+            })
         }
     }
 }
@@ -239,7 +253,12 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            listViewModel.changeQuantity(wine, true)
+                            listViewModel.onEvent(
+                                WineListEvent.ChangeQuantity(
+                                    wine = wine,
+                                    isAdd = true
+                                )
+                            )
                         }
                 )
                 Text(
@@ -255,7 +274,12 @@ private fun WineCard(
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            listViewModel.changeQuantity(wine, false)
+                            listViewModel.onEvent(
+                                WineListEvent.ChangeQuantity(
+                                    wine = wine,
+                                    isAdd = false
+                                )
+                            )
                         }
                 )
             }
